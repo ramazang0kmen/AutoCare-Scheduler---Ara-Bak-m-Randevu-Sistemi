@@ -22,17 +22,22 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
     {
         private readonly ICustomerRepository _customerRepository;
 
+        // Constructor, bir ICustomerRepository örneği oluşturur
+        // ve _customerRepository alanına atar.
         public CustomerManager()
         {
             _customerRepository = new CustomerRepository();
         }
 
+        // Yeni bir müşteri ekler.
+        // Parametre olarak bir Customer nesnesi alır.
         public void AddCustomer(Customer customer)
         {
             try
             {
                 _customerRepository.AddCustomer(customer);
             }
+            // Hata durumunda loglama yapar ve kullanıcıya bir hata kutusu gösterir.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
@@ -40,12 +45,15 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Tüm müşterileri getirir.
+        // Geriye bir Liste<Customer> döndürür.
         public List<Customer> GetAllCustomer()
         {
             try
             {
                 return _customerRepository.GetAllCustomer();
             }
+            // Hata durumunda loglama yapar, kullanıcıya bir hata kutusu gösterir ve null döndürür.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
@@ -54,12 +62,16 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Belirli bir müşteriyi id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Customer nesnesi döndürür veya null döndürür.
         public Customer GetCustomerById(int id)
         {
             try
             {
                 return _customerRepository.GetCustomerById(id);
             }
+            // Hata durumunda loglama yapar, kullanıcıya bir hata kutusu gösterir ve null döndürür.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
@@ -69,3 +81,4 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
         }
     }
 }
+

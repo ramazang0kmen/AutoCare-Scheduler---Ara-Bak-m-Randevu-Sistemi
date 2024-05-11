@@ -32,14 +32,17 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
         {
             try
             {
+                // Müşteri yöneticisini oluşturur.
                 CustomerManager customerManager = new CustomerManager();
 
+                // Formdan müşteri bilgilerini alır.
                 string namesurname = customer_name_surname.Text;
                 string phonenumber = customer_phone_number.Text;
                 string emailaddress = customer_email.Text;
                 bool isValidEmail = Regex.IsMatch(emailaddress, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
                 string address = customer_address.Text;
 
+                // Alanların boş olup olmadığını ve geçerli bir e-posta adresi olup olmadığını kontrol eder.
                 if (string.IsNullOrEmpty(namesurname) || string.IsNullOrEmpty(phonenumber) || string.IsNullOrEmpty(address))
                 {
                     MessageBox.Show("Lütfen tüm alanları doldurunuz.");
@@ -53,6 +56,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
                     return;
                 }
 
+                // Yeni bir müşteri nesnesi oluşturur ve ekler.
                 Customer newCustomer = new Customer
                 {
                     NameSurname = namesurname,
@@ -63,19 +67,23 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
                 customerManager.AddCustomer(newCustomer);
 
+                // Alanları temizler.
                 ClearFields();
 
                 MessageBox.Show("Müşteri başarıyla eklendi.");
             }
             catch (Exception ex)
             {
+                // Hata durumunda kullanıcıya bilgi verir ve log kaydı oluşturur.
                 MessageBox.Show("Müşteri eklenirken bir hata oluştu. Hata: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Logger.LogError("Müşteri eklenirken bir hata oluştu. Hata: " + ex.Message);
             }
         }
 
+        // Alanları temizleme metodu.
         private void ClearFields()
         {
+            // Tüm TextBox alanlarını temizler.
             customer_name_surname.Clear();
             customer_phone_number.Clear();
             customer_email.Clear();
@@ -91,6 +99,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
             detailed_information.Clear();
         }
 
+        // CheckBox'ın durumuna göre şifre karakterlerini gösterme/gizleme metodu.
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -105,6 +114,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
         private void PanelPage_Load(object sender, EventArgs e)
         {
+            // Şifre karakterlerini gizler.
             personnel_password.PasswordChar = '*';
         }
 
@@ -112,20 +122,24 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
         {
             try
             {
+                // Personel yöneticisini oluşturur.
                 PersonnelManager personnelManager = new PersonnelManager();
 
+                // Formdan personel bilgilerini alır.
                 string namesurname = personnel_name_surname.Text;
                 string username = personnel_username.Text;
                 string password = personnel_password.Text;
                 string HashedPassword = HashPassword(password);
                 string department = personnel_department.Text;
 
+                // Alanların boş olup olmadığını kontrol eder.
                 if (string.IsNullOrEmpty(namesurname) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(department))
                 {
                     MessageBox.Show("Lütfen tüm alanları doldurunuz.");
                     return;
                 }
 
+                // Yeni bir personel nesnesi oluşturur ve ekler.
                 Personnel newpersonnel = new Personnel
                 {
                     NameSurname = namesurname,
@@ -136,6 +150,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
                 personnelManager.AddPersonnel(newpersonnel);
 
+                // Alanları temizler.
                 ClearFields();
 
                 MessageBox.Show("Personel başarıyla eklendi.");
@@ -147,13 +162,16 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
             }
         }
 
+        // Şifreyi SHA256 algoritmasıyla hashleme metodu.
         static string HashPassword(string password)
         {
             try
             {
+                // SHA256 algoritmasıyla hash hesaplar.
                 SHA256 sha256Hash = SHA256.Create();
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
 
+                // Hashlenmiş şifreyi string olarak geri döndürür.
                 string hashedPassword = string.Empty;
                 for (int i = 0; i < bytes.Length; i++)
                 {
@@ -171,9 +189,11 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
         private void personnel_username_TextChanged(object sender, EventArgs e)
         {
+            // Kullanıcı adını küçük harfe dönüştürür.
             personnel_username.Text = personnel_username.Text.ToLower();
             personnel_username.SelectionStart = personnel_username.Text.Length;
 
+            // Türkçe karakterleri kontrol eder ve kaldırır.
             string newText = string.Empty;
             foreach (char c in personnel_username.Text.ToLower())
             {
@@ -186,13 +206,17 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
             personnel_username.SelectionStart = personnel_username.Text.Length;
         }
 
+        // Türkçe karakter kontrolü metodu.
         private bool IsTurkishCharacter(char c)
         {
+            // Karakterin Türkçe olup olmadığını kontrol eder.
             return "çğıöşüÇĞİÖŞÜ".Contains(c);
         }
 
+        // Şifre TextBox'ının metnini düzenleme ve hashleme metodu.
         private void personnel_password_TextChanged(object sender, EventArgs e)
         {
+            // Şifreyi kontrol eder ve hashler.
             personnel_password.Text = HashHelper.PasswordController(personnel_password.Text);
             personnel_password.Text = personnel_password.Text.ToLower();
             personnel_password.SelectionStart = personnel_password.Text.Length;
@@ -202,17 +226,21 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
         {
             try
             {
+                // Servis yöneticisini oluşturur.
                 ServiceManager serviceManager = new ServiceManager();
 
+                // Formdan servis bilgilerini alır.
                 string servicename = service_name.Text;
                 string serviceaddress = service_address.Text;
 
+                // Alanların boş olup olmadığını kontrol eder.
                 if (string.IsNullOrEmpty(servicename) || string.IsNullOrEmpty(serviceaddress))
                 {
                     MessageBox.Show("Lütfen tüm alanları doldurunuz.");
                     return;
                 }
 
+                // Yeni bir servis nesnesi oluşturur ve ekler.
                 Service newService = new Service
                 {
                     Name = servicename,
@@ -221,6 +249,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
                 serviceManager.AddService(newService);
 
+                // Alanları temizler.
                 ClearFields();
 
                 MessageBox.Show("Servis başarıyla eklendi.");
@@ -236,18 +265,22 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
         {
             try
             {
+                // İşlem yöneticisini oluşturur.
                 OperationManager operationManager = new OperationManager();
 
+                // Formdan işlem bilgilerini alır.
                 string operationname = operation_name.Text;
                 string operationprice = operation_price.Text;
                 string operationdescription = detailed_information.Text;
 
+                // Alanların boş olup olmadığını kontrol eder.
                 if (string.IsNullOrEmpty(operationname) || string.IsNullOrEmpty(operationprice) || string.IsNullOrEmpty(operationdescription))
                 {
                     MessageBox.Show("Lütfen tüm alanları doldurunuz.");
                     return;
                 }
 
+                // Yeni bir işlem nesnesi oluşturur ve ekler.
                 Operation newOperation = new Operation
                 {
                     Name = operationname,
@@ -257,6 +290,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
                 operationManager.AddOperation(newOperation);
 
+                // Alanları temizler.
                 ClearFields();
 
                 MessageBox.Show("Hizmet Tipi başarıyla eklendi.");
@@ -270,6 +304,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
         private void anaSayfaToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Panel sayfasını gizler ve ana sayfayı gösterir.
             this.Hide();
 
             Form1 homePage = new Form1();
@@ -278,6 +313,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Forms
 
         private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Kullanıcı oturumunu sonlandırır ve giriş sayfasını gösterir.
             LoginUser.SetUserName(null);
 
             this.Hide();

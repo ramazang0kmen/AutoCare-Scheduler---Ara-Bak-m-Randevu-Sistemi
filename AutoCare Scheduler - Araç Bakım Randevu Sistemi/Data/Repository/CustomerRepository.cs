@@ -20,17 +20,23 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
+        // Veritabanı bağlantı dizesini depolar.
         private readonly string _connectionString;
 
+        // Sınıfın kurucu metodunda veritabanı bağlantı dizesini alır ve atar.
         public CustomerRepository()
         {
             _connectionString = Config.GetConnectionString();
         }
 
+        // Yeni bir müşteri ekler.
+        // Parametre olarak bir Customer nesnesi alır.
+        // Geriye bir şey döndürmez.
         public void AddCustomer(Customer customer)
         {
             try
             {
+                // Veritabanına bağlanır ve yeni bir müşteri ekler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO Customer (NameSurname, PhoneNumber, EmailAddress, Address) VALUES (@NameSurname, @PhoneNumber, @EmailAddress, @Address)", connection);
@@ -42,15 +48,19 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
             catch (Exception ex)
             {
+                // Hata durumunda log kaydı oluşturur.
                 Logger.LogError(ex.Message);
                 Logger.LogBox(ex.Message);
             }
         }
 
+        // Tüm müşterileri getirir.
+        // Geriye bir Liste<Customer> döndürür.
         public List<Customer> GetAllCustomer()
         {
             try
             {
+                // Veritabanından tüm müşterileri alır ve listeler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 List<Customer> customers = new List<Customer>();
                 connection.Open();
@@ -78,10 +88,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Belirli bir müşteriyi id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Customer nesnesi döndürür veya null döndürür.
         public Customer GetCustomerById(int id)
         {
             try
             {
+                // Veritabanından belirli bir müşteriyi id'ye göre getirir.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM Customer WHERE Id = @Id", connection);

@@ -13,11 +13,14 @@
 
 namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Helpers
 {
+    // Config sınıfı, uygulamanın yapılandırma (config) ayarlarını sağlar.
     public class Config
     {
+        // GetConnectionString metodu, uygulamanın veritabanına bağlanmak için gereken bağlantı dizesini döndürür.
         public static string GetConnectionString()
         {
-            return "Data Source=DATASOURCE;Initial Catalog=AutoCareSchedulerDb;Integrated Security=True";
+            // Bu örnek bağlantı dizesi, lokal bir SQL Server veritabanına bağlanmayı sağlar.
+            return "Data Source=DESKTOP-BHG0SFD;Initial Catalog=AutoCareSchedulerDb;Integrated Security=True";
         }
     }
 }

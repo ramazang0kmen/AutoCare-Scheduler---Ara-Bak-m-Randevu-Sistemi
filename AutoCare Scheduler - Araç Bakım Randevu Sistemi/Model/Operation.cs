@@ -13,11 +13,20 @@
 
 namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Model
 {
+    // Operation sınıfı, bir işlemi temsil eder.
     public class Operation
     {
+        // İşlem ID'si.
         public int Id { get; set; }
+
+        // İşlemin adı.
         public string Name { get; set; }
+
+        // İşlemin fiyatı.
         public double Price { get; set; }
+
+        // İşlemin açıklaması.
         public string Description { get; set; }
     }
 }
+

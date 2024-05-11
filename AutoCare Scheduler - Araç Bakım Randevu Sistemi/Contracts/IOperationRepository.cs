@@ -17,8 +17,18 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Contracts
 {
     public interface IOperationRepository
     {
+        // Belirli bir işlemi id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Operation nesnesi döndürür veya null döndürür.
         Operation GetOperationById(int id);
+
+        // Tüm işlemleri getirir.
+        // Geriye bir Liste<Operation> döndürür.
         List<Operation> GetAllOperation();
+
+        // Yeni bir işlem ekler.
+        // Parametre olarak bir Operation nesnesi alır.
         void AddOperation(Operation operation);
     }
 }
+

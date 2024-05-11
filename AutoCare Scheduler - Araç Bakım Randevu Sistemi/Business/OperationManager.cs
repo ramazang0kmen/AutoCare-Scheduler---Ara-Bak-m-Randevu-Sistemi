@@ -22,17 +22,22 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
     {
         private readonly IOperationRepository _operationRepository;
 
+        // Constructor, bir IOperationRepository örneği oluşturur
+        // ve _operationRepository alanına atar.
         public OperationManager()
         {
             _operationRepository = new OperationRepository();
         }
 
+        // Yeni bir işlem (operation) ekler.
+        // Parametre olarak bir Operation nesnesi alır.
         public void AddOperation(Operation operation)
         {
             try
             {
                 _operationRepository.AddOperation(operation);
             }
+            // Hata durumunda loglama yapar ve kullanıcıya bir hata kutusu gösterir.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
@@ -40,12 +45,15 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Tüm işlemleri (operations) getirir.
+        // Geriye bir Liste<Operation> döndürür.
         public List<Operation> GetAllOperation()
         {
             try
             {
                 return _operationRepository.GetAllOperation();
             }
+            // Hata durumunda loglama yapar, kullanıcıya bir hata kutusu gösterir ve null döndürür.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
@@ -54,12 +62,16 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Belirli bir işlemi (operation) id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Operation nesnesi döndürür veya null döndürür.
         public Operation GetOperationById(int id)
         {
             try
             {
                 return _operationRepository.GetOperationById(id);
             }
+            // Hata durumunda loglama yapar, kullanıcıya bir hata kutusu gösterir ve null döndürür.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
@@ -69,3 +81,4 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
         }
     }
 }
+

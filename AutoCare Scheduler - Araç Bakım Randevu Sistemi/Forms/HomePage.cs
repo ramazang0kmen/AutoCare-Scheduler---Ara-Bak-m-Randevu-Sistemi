@@ -25,18 +25,24 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
             InitializeComponent();
         }
 
+        // Müşteri, hizmet, işlem, personel ve randevu yöneticilerini tanımlar.
         CustomerManager customerManager = new CustomerManager();
         ServiceManager serviceManager = new ServiceManager();
         OperationManager operationManager = new OperationManager();
         PersonnelManager personnelManager = new PersonnelManager();
         AppointmentManager appointmentManager = new AppointmentManager();
 
+        // Seçilen müşteri, hizmet ve işlem için id değerlerini saklar.
         int customerId = -1;
         int serviceId = -1;
         int operationId = -1;
+
+        // Form yüklendiğinde gerçekleşecek işlemleri tanımlar.
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Liste verilerini günceller.
             update_list();
+            // Liste görünümlerini ayarlar.
             customers_list.FullRowSelect = true;
             services_list.FullRowSelect = true;
             operations_list.FullRowSelect = true;
@@ -53,6 +59,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                     return;
                 }
 
+                // Seçilen müşteri, hizmet ve işlem bilgilerini alır.
                 customerId = Convert.ToInt32(customers_list.SelectedItems[0].SubItems[0].Text);
                 serviceId = Convert.ToInt32(services_list.SelectedItems[0].SubItems[0].Text);
                 operationId = Convert.ToInt32(operations_list.SelectedItems[0].SubItems[0].Text);
@@ -61,9 +68,11 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                 int appointmentminute = int.Parse(appointment_minutes.SelectedItem.ToString());
                 DateTime appointmentdate = new DateTime(selecteddate.Year, selecteddate.Month, selecteddate.Day, appointmenthour, appointmentminute, 0);
 
+                // Seçilen işlemin bilgilerini alır.
                 Operation operation = operationManager.GetOperationById(operationId);
                 Personnel personnel = personnelManager.GetPersonnelByUsername(LoginUser.Username);
 
+                // Yeni bir randevu oluşturur.
                 Appointment appointment = new Appointment
                 {
                     CustomerId = customerId,
@@ -75,19 +84,23 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                     Description = operation.Description
                 };
 
+                // Oluşturulan randevuyu kaydeder.
                 appointmentManager.AddAppointment(appointment);
 
+                // Liste verilerini günceller.
                 update_list();
 
                 MessageBox.Show("Randevu başarıyla eklendi.");
             }
             catch (Exception ex)
             {
+                // Hata durumunda kullanıcıya bilgi verir.
                 MessageBox.Show("Randevu eklenirken bir hata oluştu. Lütfen tablolardan gerekli bilgileri, tarihi ve saati kontrol ederek tekrar deneyiniz. Hata: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Logger.LogError("Randevu eklenirken bir hata oluştu. Hata: " + ex.Message);
             }
         }
 
+        // Randevu listesi güncellendiğinde seçilen tarih için bugünden önceki bir tarihin seçilip seçilmediğini kontrol eder.
         private void appointment_date_DateSelected(object sender, DateRangeEventArgs e)
         {
             DateTime selectedDate = appointment_date.SelectionRange.Start;
@@ -99,19 +112,25 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
             }
         }
 
+        // Liste verilerini günceller.
         private void update_list()
         {
             try
             {
+                // Tüm randevuları alır.
                 List<Appointment> appointments = appointmentManager.GetAllAppointment();
 
+                // Randevu listesini günceller.
                 appointment_list.Items.Clear();
                 foreach (var appointment in appointments)
                 {
+                    // Her randevu için gerekli bilgileri alır.
                     Customer customer = customerManager.GetCustomerById(appointment.CustomerId);
                     Service service = serviceManager.GetServiceById(appointment.ServiceId);
                     Operation operation = operationManager.GetOperationById(appointment.OperationId);
                     Personnel personnel = personnelManager.GetPersonnelById(appointment.PersonnelId);
+
+                    // Listeye randevu bilgilerini ekler.
                     ListViewItem item = new ListViewItem();
                     item.Text = appointment.Id.ToString();
                     item.SubItems.Add(customer.NameSurname.ToString());
@@ -129,8 +148,10 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                     appointment_list.Items.Add(item);
                 }
 
+                // Listview sütunlarını otomatik boyutlandırır.
                 appointment_list.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
+                // Diğer listeleri günceller.
                 List<Customer> customers = customerManager.GetAllCustomer();
 
                 customers_list.Items.Clear();
@@ -183,14 +204,16 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
             }
         }
 
+        // Randevu listesinde bir öğe seçildiğinde işlemleri gerçekleştirir.
         private void appointment_list_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                string customername = null;
-                string servicename = null;
-                string operationname = null;
-                string date = null;
+                // Seçilen randevunun müşteri, hizmet, işlem ve tarih bilgilerini alır.
+                string customername = (sender as ListView).SelectedItems[0].SubItems[1].Text;
+                string servicename = (sender as ListView).SelectedItems[0].SubItems[5].Text;
+                string operationname = (sender as ListView).SelectedItems[0].SubItems[7].Text;
+                string date = (sender as ListView).SelectedItems[0].SubItems[10].Text;
                 int selectedHour = 08;
                 int selectedMinute = 00;
 
@@ -200,12 +223,6 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                 //servicename = appointment_list.SelectedItems[0].SubItems[5].Text;
                 //operationname = appointment_list.SelectedItems[0].SubItems[7].Text;
                 //date = appointment_list.SelectedItems[0].SubItems[10].Text;
-
-
-                customername = (sender as ListView).SelectedItems[0].SubItems[1].Text;
-                servicename = (sender as ListView).SelectedItems[0].SubItems[5].Text;
-                operationname = (sender as ListView).SelectedItems[0].SubItems[7].Text;
-                date = (sender as ListView).SelectedItems[0].SubItems[10].Text;
 
                 foreach (ListViewItem item in customers_list.Items)
                 {
@@ -222,6 +239,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                     item.Selected = false;
                 }
 
+                // Seçilen müşteri, hizmet ve işlemi liste görünümlerinde seçili hale getirir.
                 foreach (ListViewItem item in customers_list.Items)
                 {
                     if (item.SubItems[1].Text == customername)
@@ -249,6 +267,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
                     }
                 }
 
+                // Randevu tarihini ve saatini belirler.
                 appointment_date.SetDate(DateTime.Parse(date));
 
                 selectedHour = DateTime.Parse(date).Hour;
@@ -264,8 +283,10 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
             }
         }
 
+        // Çıkış yapma işlemini gerçekleştirir.
         private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Kullanıcı adını null yapar ve giriş sayfasını gösterir.
             LoginUser.SetUserName(null);
 
             this.Hide();
@@ -274,6 +295,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
             loginPage.Show();
         }
 
+        // Panel sayfasına geçişi sağlar.
         private void panelSayfasıToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -282,10 +304,12 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
             panelPage.Show();
         }
 
+        // Seçilen randevuyu kaldırır.
         private void remove_appointments_Click(object sender, EventArgs e)
         {
             try
             {
+                // Seçilen randevunun id'sini alır ve kaldırma işlemini gerçekleştirir.
                 int removeid = Convert.ToInt32(appointment_list.SelectedItems[0].SubItems[0].Text);
                 appointmentManager.RemoveAppointment(removeid);
                 update_list();
@@ -298,10 +322,13 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi
 
         }
 
+        // Seçilen randevuyu günceller.
         private void update_appointments_Click(object sender, EventArgs e)
         {
             try
             {
+                // Seçilen müşteri, hizmet ve işlem bilgilerini alır.
+                // Randevuyu günceller ve listeyi günceller.
                 if (Convert.ToInt32(customers_list.SelectedItems[0].SubItems[0].Text) == null || Convert.ToInt32(services_list.SelectedItems[0].SubItems[0].Text) == null || Convert.ToInt32(operations_list.SelectedItems[0].SubItems[0].Text) == null || appointment_date.SelectionRange.Start.Date < DateTime.Today)
                 {
                     MessageBox.Show("Lütfen tablolardan gerekli bilgileri, tarihi ve saati seçiniz.");

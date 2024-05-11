@@ -17,8 +17,18 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Contracts
 {
     public interface IServiceRepository
     {
+        // Belirli bir hizmeti id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Service nesnesi döndürür veya null döndürür.
         Service GetServiceById(int id);
+
+        // Tüm hizmetleri getirir.
+        // Geriye bir Liste<Service> döndürür.
         List<Service> GetAllService();
+
+        // Yeni bir hizmet ekler.
+        // Parametre olarak bir Service nesnesi alır.
         void AddService(Service service);
     }
 }
+

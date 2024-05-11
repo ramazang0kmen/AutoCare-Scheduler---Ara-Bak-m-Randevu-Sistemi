@@ -13,12 +13,23 @@
 
 namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Model
 {
+    // Personnel sınıfı, bir personeli temsil eder.
     public class Personnel
     {
+        // Personel ID'si.
         public int Id { get; set; }
+
+        // Personelin kullanıcı adı.
         public string Username { get; set; }
+
+        // Personelin şifresi.
         public string Password { get; set; }
+
+        // Personelin adı ve soyadı.
         public string NameSurname { get; set; }
+
+        // Personelin çalıştığı departman.
         public string Department { get; set; }
     }
 }
+

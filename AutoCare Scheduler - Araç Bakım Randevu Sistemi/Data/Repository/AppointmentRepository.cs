@@ -20,17 +20,23 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
 {
     public class AppointmentRepository : IAppointmentRepository
     {
+        // Veritabanı bağlantı dizesini depolar.
         private readonly string _connectionString;
 
+        // Sınıfın kurucu metodunda veritabanı bağlantı dizesini alır ve atar.
         public AppointmentRepository()
         {
             _connectionString = Config.GetConnectionString();
         }
 
+        // Yeni bir randevu ekler.
+        // Parametre olarak bir Appointment nesnesi alır.
+        // Geriye bir şey döndürmez.
         public void AddAppointment(Appointment appointment)
         {
             try
             {
+                // Veritabanına bağlanır ve yeni bir randevu ekler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("INSERT INTO Appointment (CustomerId, ServiceId, OperationId, PersonnelId, Date, TotalPrice, Description) VALUES (@CustomerId, @ServiceId, @OperationId, @PersonnelId, @Date, @TotalPrice, @Description)", connection);
@@ -45,15 +51,19 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
             catch (Exception ex)
             {
+                // Hata durumunda log kaydı oluşturur.
                 Logger.LogError(ex.Message);
                 Logger.LogBox(ex.Message);
             }
         }
 
+        // Tüm randevuları getirir.
+        // Geriye bir Liste<Appointment> döndürür.
         public List<Appointment> GetAllAppointment()
         {
             try
             {
+                // Veritabanından tüm randevuları alır ve listeler.
                 List<Appointment> appointments = new List<Appointment>();
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
@@ -85,10 +95,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Belirli bir randevuyu id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Appointment nesnesi döndürür veya null döndürür.
         public Appointment GetAppointmentById(int id)
         {
             try
             {
+                // Veritabanından belirli bir randevuyu id'ye göre getirir.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM Appointment WHERE Id = @Id", connection);
@@ -123,10 +137,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Belirli bir randevuyu siler.
+        // Parametre olarak bir id alır.
+        // Geriye bir şey döndürmez.
         public void RemoveAppointment(int id)
         {
             try
             {
+                // Veritabanından belirli bir randevuyu siler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("DELETE FROM Appointment WHERE Id = @Id", connection);
@@ -140,10 +158,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Bir randevuyu günceller.
+        // Parametre olarak bir Appointment nesnesi alır.
+        // Geriye bir şey döndürmez.
         public void UpdateAppointment(Appointment appointment)
         {
             try
             {
+                // Veritabanında bir randevuyu günceller.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("UPDATE Appointment SET CustomerId = @CustomerId, ServiceId = @ServiceId, PersonnelId = @PersonnelId, Date = @Date, TotalPrice = @TotalPrice, Description = @Description WHERE Id = @Id", connection);

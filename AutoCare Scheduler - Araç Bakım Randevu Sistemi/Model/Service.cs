@@ -13,10 +13,17 @@
 
 namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Model
 {
+    // Service sınıfı, bir hizmeti temsil eder.
     public class Service
     {
+        // Hizmet ID'si.
         public int Id { get; set; }
-        public string Name { get; set; }    
+
+        // Hizmetin adı.
+        public string Name { get; set; }
+
+        // Hizmetin adresi.
         public string Address { get; set; }
     }
 }
+

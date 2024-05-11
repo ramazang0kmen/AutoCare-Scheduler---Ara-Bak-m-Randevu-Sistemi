@@ -20,17 +20,23 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
 {
     public class ServiceRepository : IServiceRepository
     {
+        // Veritabanı bağlantı dizesini depolar.
         private readonly string _connectionString;
 
+        // Sınıfın kurucu metodunda veritabanı bağlantı dizesini alır ve atar.
         public ServiceRepository()
         {
             _connectionString = Config.GetConnectionString();
         }
 
+        // Yeni bir servis ekler.
+        // Parametre olarak bir Service nesnesi alır.
+        // Geriye bir şey döndürmez.
         public void AddService(Service service)
         {
             try
             {
+                // Veritabanına bağlanır ve yeni bir servis ekler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 string query = "INSERT INTO Service (Name, Address) VALUES (@Name, @Address)";
@@ -42,15 +48,19 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
             catch (Exception ex)
             {
+                // Hata durumunda log kaydı oluşturur.
                 Logger.LogError(ex.Message);
                 Logger.LogBox(ex.Message);
             }
         }
 
+        // Tüm servisleri getirir.
+        // Geriye bir Liste<Service> döndürür.
         public List<Service> GetAllService()
         {
             try
             {
+                // Veritabanından tüm servisleri alır ve listeler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 string query = "SELECT * FROM Service";
@@ -78,10 +88,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Belirli bir servisleri id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Service nesnesi döndürür veya null döndürür.
         public Service GetServiceById(int id)
         {
             try
             {
+                // Veritabanından belirli bir servisleri id'ye göre getirir.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 string query = "SELECT * FROM Service WHERE Id = @Id";

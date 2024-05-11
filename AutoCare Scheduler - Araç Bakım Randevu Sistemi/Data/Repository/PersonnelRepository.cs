@@ -20,17 +20,23 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
 {
     public class PersonnelRepository : IPersonnelRepository
     {
+        // Veritabanı bağlantı dizesini depolar.
         private readonly string _connectionString;
 
         public PersonnelRepository()
         {
+            // Sınıfın kurucu metodunda veritabanı bağlantı dizesini alır ve atar.
             _connectionString = Config.GetConnectionString();
         }
 
+        // Yeni bir personel ekler.
+        // Parametre olarak bir Personnel nesnesi alır.
+        // Geriye bir şey döndürmez.
         public void AddPersonnel(Personnel personnel)
         {
             try
             {
+                // Veritabanına bağlanır ve yeni bir personel ekler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 string query = "INSERT INTO Personnel (username, Password, NameSurname, Department) VALUES (@username, @Password, @NameSurname, @Department)";
@@ -44,15 +50,19 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
             catch (Exception ex)
             {
+                // Hata durumunda log kaydı oluşturur.
                 Logger.LogError(ex.Message);
                 Logger.LogBox(ex.Message);
             }
         }
 
+        // Tüm personelleri getirir.
+        // Geriye bir Liste<Personnel> döndürür.
         public List<Personnel> GetAllPersonnel()
         {
             try
             {
+                // Veritabanından tüm müşterileri alır ve listeler.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM Personnel", connection);
@@ -80,10 +90,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Belirli bir personeli id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Personnel nesnesi döndürür veya null döndürür.
         public Personnel GetPersonnelById(int id)
         {
             try
             {
+                // Veritabanından belirli bir personeli id'ye göre getirir.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM Personnel WHERE Id = @Id", connection);
@@ -109,10 +123,14 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Data.Repository
             }
         }
 
+        // Belirli bir personeli username'e göre getirir.
+        // Parametre olarak bir username alır.
+        // Geriye bir Personnel nesnesi döndürür veya null döndürür.
         public Personnel GetPersonnelByUsername(string username)
         {
             try
             {
+                // Veritabanından belirli bir personeli username'e göre getirir.
                 SqlConnection connection = new SqlConnection(_connectionString);
                 connection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM Personnel WHERE username = @username", connection);

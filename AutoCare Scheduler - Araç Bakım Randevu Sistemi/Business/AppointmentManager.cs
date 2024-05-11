@@ -18,6 +18,8 @@ using AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Model;
 
 namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
 {
+    // Constructor, bir IAppointmentRepository örneği oluşturur
+    // ve _appointmentRepository alanına atar.
     public class AppointmentManager
     {
         private readonly IAppointmentRepository _appointmentRepository;
@@ -27,19 +29,24 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             _appointmentRepository = new AppointmentRepository();
         }
 
+        // Yeni bir randevu ekler.
+        // Parametre olarak bir Appointment nesnesi alır.
         public void AddAppointment(Appointment appointment)
         {
             try
             {
                 _appointmentRepository.AddAppointment(appointment);
             }
+            // Hata durumunda loglama yapar ve kullanıcıya bir hata kutusu gösterir.
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
                 Logger.LogBox(ex.Message);
-            }   
+            }
         }
         
+        // Tüm randevuları getirir.
+        // Geriye bir Liste<Appointment> döndürür.
         public List<Appointment> GetAllAppointment()
         {
             try
@@ -54,6 +61,8 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Bir randevuyu günceller.
+        // Parametre olarak bir Appointment nesnesi alır.
         public void UpdateAppointment(Appointment appointment)
         {
             try
@@ -68,6 +77,8 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Bir randevuyu kaldırır.
+        // Parametre olarak bir id alır.
         public void RemoveAppointment(int id)
         {
             try
@@ -81,6 +92,9 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Business
             }
         }
 
+        // Belirli bir randevuyu id'ye göre getirir.
+        // Parametre olarak bir id alır.
+        // Geriye bir Appointment nesnesi döndürür veya null döndürür.
         public Appointment GetAppointmentById(int id)
         {
             try
