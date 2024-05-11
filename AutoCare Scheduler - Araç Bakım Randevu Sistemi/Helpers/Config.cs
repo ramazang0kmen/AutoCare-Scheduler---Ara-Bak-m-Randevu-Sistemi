@@ -17,7 +17,7 @@ namespace AutoCare_Scheduler___Araç_Bakım_Randevu_Sistemi.Helpers
     {
         public static string GetConnectionString()
         {
-            return "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AutoCareSchedulerDb;Integrated Security=True";
+            return "Data Source=DATASOURCE;Initial Catalog=AutoCareSchedulerDb;Integrated Security=True";
         }
     }
 }
